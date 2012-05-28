@@ -11,8 +11,9 @@ urlpatterns = patterns('',
     # url(r'^tenttiarkisto/', include('tenttiarkisto.foo.urls')),
     url(r'^courses/$', 'exams.views.courselist'),
     url(r'^courses/add/$', 'exams.views.addcourse'),
-    url(r'^courses/(?P<course_id>\d+)/$', 'exams.views.courseview'),
+    url(r'^courses/(?P<course_id>\d+)/(.+)?$', 'exams.views.courseview'),
     url(r'^exams/(?P<exam_id>\d+)/(.+)?$', 'exams.views.examview'),
+    url(r'^exams/add/$', 'exams.views.addexam'),
 
     # account stuff
     (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),

@@ -7,7 +7,7 @@ class Course(models.Model):
   code = models.CharField(max_length = 20, unique = True)
   name = models.CharField(max_length = 100)
   def get_absolute_url(self):
-    return "/courses/%i/" % self.id
+    return "/courses/%i/%s/" % (self.id, slugify(self.name))
   def __unicode__(self):
     return "%s: %s" % (self.code, self.name)
 
@@ -25,7 +25,7 @@ class Exam(models.Model):
   lang = models.ForeignKey(Lang)
   submitter = models.ForeignKey(User, null = True, blank = True)
   def get_absolute_url(self):
-    return "/exams/%i/%s/%s/" % (self.id, slugify(self.course.code), slugify(self.exam_date))
+    return "/exams/%i/%s/%s/" % (self.id, slugify(self.course.name), slugify(self.exam_date))
   def __unicode__(self):
     return "%s: %s %s" % (self.course.code, self.exam_date, self.desc)
 

@@ -38,7 +38,20 @@ def examview(request, exam_id):
   exam = get_object_or_404(Exam, pk=exam_id)
   return render_to_response('examview.html', {'exam': exam, 'files': exam.examfile_set.all()}, context_instance=RequestContext(request))
 
+class ExamForm(ModelForm):
+  class Meta:
+    model = Exam
 
+def addexam(request):
+  added = False
+  if request.method == 'POST':
+    form = ExamForm(request.POST)
+  else:
+    form = ExamForm()
+  return render_to_response('addexam.html', {'form': form, 'added': added}, context_instance=RequestContext(request))
+
+
+# user registration view
 def register(request):
   if request.user.is_authenticated():
     return HttpResponseRedirect('/')
