@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from django.db.models import Count, Q
 from django.template import RequestContext
 from exams.models import Course, Exam
@@ -48,6 +49,9 @@ def register(request):
     if form.is_valid():
       created = True
       form.save()
+      # a hack (?) to log the user in after registering
+      user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+      login(request, user)
   else:
     form = UserCreationForm()
   return render_to_response('register.html', {'form': form, 'created': created}, context_instance=RequestContext(request))
