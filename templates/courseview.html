@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Course {{ course.code}}: {{ course.name }}</h2>
+{% if exams %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Exams</th>
+      </tr>
+    </thead>
+  {% for exam in exams %}
+  <tr><td><a href="{{ exam.get_absolute_url }}">{{ exam.exam_date }}</a></td><td>{{ exam.desc }}</td><td>{{ exam.lang.name }}</td></tr>
+  {% endfor %}
+  </table>
+{% else %}
+<p>No exams for this course!</p>
+{% endif %}
+{% endblock %}

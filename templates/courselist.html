@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Courses</h2>
+
+{% if courses %}
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Exams</th>
+    </tr>
+  </thead>
+  {% for course in courses %}
+  <tr><td><a href="{{ course.get_absolute_url }}">{{ course.code }}</a></td><td><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></td><td>{{ course.exam_count }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No courses match your query! Please search again with a less specific query.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+Course: {{ exam.course.code }} {{ exam.course.name }}<br>
+Exam date: {{ exam.exam_date|date:"d.m.Y" }}<br>
+{% if exam.submitter %}
+Submitter: {{ exam.submitter.username }}<br>
+{% endif %}
+Added: {{ exam.date_added }}<br>
+{% for file in files %}
+{{ file.exam_file.name }}<a href="{{ file.exam_file.url }}">Download</a><br>
+{% endfor %}
+{% endblock %}

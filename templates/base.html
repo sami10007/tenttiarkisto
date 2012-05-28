@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css" />
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.js"></script>
+    <title>{% block title %}Tenttiarkisto{% endblock %}</title>
+</head>
+
+<body>
+  <div class="row-fluid">
+    <div class="span12"><h1>Tenttiarkisto slogan here!</h1></div>
+  </div>
+  
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span2 well">
+        {% block sidebar %}
+        <ul class="nav nav-list">
+            <li class="nav-header">Browse</li>
+            <li><a href="/">Front page/search</a></li>
+            <li><a href="/courses">All courses</a></li>
+            <li class="nav-header">Add</li>
+            <li><a href="/courses/add/">Add a course</a></li>
+            <li><a href="/courses">Add an exam</a></li>
+            {% if user.is_authenticated %}
+              <li class="nav-header">Logged in as {{ user.username }}</li>
+              {% if user.is_staff %}
+                <li><a href="/admin">Admin panel</a></li>
+              {% endif %}
+              <li><a href="/logout">Logout</a></li>
+            {% else %}
+              <li class="nav-header">Login</li>
+              <li><a href="/login">Login form</a></li>
+              <li><a href="/register">Registration</a></li>
+            {% endif %}
+        </ul>
+        {% endblock %}
+      </div>
+      <div class="span10">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

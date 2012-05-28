@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Add a course</h2>
+{% if saved %}
+<div class="alert alert-success">
+  The course was succesfully added!
+</div>
+{% endif %}
+<form action="/courses/add/" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Add course" class="btn" />
+</form>
+{% endblock %}
