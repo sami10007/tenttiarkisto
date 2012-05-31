@@ -162,3 +162,6 @@ LOGGING = {
         },
     }
 }
+
+# TENTTIARKISTO CONFIG
+TENTTIARKISTO_FILE_EXTENSIONS = (".pdf", ".jpg", ".jpeg", ".tiff", ".txt", ".png", ".gif", )

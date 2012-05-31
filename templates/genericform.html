@@ -17,7 +17,7 @@
     <label for="id_{{ field.html_name }}">
       {{ field.label }}{% spaceless %}
       {% if field.help_text %}
-        <span class="form_helptext"> ({{ field.help_text }})</span>
+        <span class="form_helptext" data-field-id="id_{{ field.html_name }}"> ({{ field.help_text }})</span>
       {% endif %}
       {% endspaceless %}:
     </label>

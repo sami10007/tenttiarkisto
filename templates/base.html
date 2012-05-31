@@ -3,40 +3,47 @@
 <head>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.20.custom.css" />
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.20.custom.min.js"></script>
     <title>{% block title %}Tenttiarkisto{% endblock %}</title>
     <script type="text/javascript">
+      $(function(){
+        // hide fallback tooltips and construct javascript ones
+        $(".form_helptext").hide().each(function(i, e) {
+          $("#" + $(e).attr("data-field-id")).tooltip({title: e.innerHTML.replace(/^ *\((.+)\)$/, "$1")});
+        });
+      });
       {% block js %}{% endblock %}
     </script>
 </head>
 
 <body>
-  <div class="row-fluid">
-    <div class="span12"><h1>Tenttiarkisto slogan here!</h1></div>
-  </div>
-  
-  <div class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="span12 well"><h1>Tenttiarkisto slogan here!</h1></div>
+    </div>
     <div class="row-fluid">
       <div class="span2 well">
         {% block sidebar %}
         <ul class="nav nav-list">
             <li class="nav-header">Browse</li>
-            <li><a href="/">Front page/search</a></li>
-            <li><a href="/courses">All courses</a></li>
+            <li><a href="/">Front page</a></li>
+            <li><a href="/courses/">All courses</a></li>
             <li class="nav-header">Add</li>
             <li><a href="/courses/add/">Add a course</a></li>
-            <li><a href="/exams/add">Add an exam</a></li>
+            <li><a href="/exams/add/">Add an exam</a></li>
             {% if user.is_authenticated %}
               <li class="nav-header">Logged in as {{ user.username }}</li>
               {% if user.is_staff %}
-                <li><a href="/admin">Admin panel</a></li>
+                <li><a href="/admin/">Admin panel</a></li>
               {% endif %}
-              <li><a href="/logout">Logout</a></li>
+              <li><a href="/logout/">Logout</a></li>
             {% else %}
               <li class="nav-header">Login</li>
-              <li><a href="/login">Login form</a></li>
-              <li><a href="/register">Registration</a></li>
+              <li><a href="/login/">Login form</a></li>
+              <li><a href="/register/">Registration</a></li>
             {% endif %}
         </ul>
         {% endblock %}
@@ -44,6 +51,9 @@
       <div class="span10">
         {% block content %}{% endblock %}
       </div>
+    </div>
+    <div class="row">
+      <div class="span12 well">very small footer</div>
     </div>
   </div>
 </body>

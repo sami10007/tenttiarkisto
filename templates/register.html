@@ -1,14 +1,5 @@
 {% extends "base.html" %}
 
-{% block js %}
-  $(function(){
-      // ugly, it would be better to add field.help_text as titles in genericform.html
-      $(".form_helptext").hide();
-      $("#id_username").tooltip({title: "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."});
-      $("#id_password2").tooltip({title: "Enter the same password as above, for verification."});
-  });
-{% endblock %}
-
 {% block content %}
 <h2>Account registration</h2>
 {% if created %}

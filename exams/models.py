@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from exams.utils import ExtFileField
+from django.conf import settings
 from os import path
 
 class Course(models.Model):
@@ -19,8 +21,8 @@ class Lang(models.Model):
 
 class Exam(models.Model):
   course = models.ForeignKey(Course)
-  desc = models.CharField(max_length = 100)
-  exam_date = models.DateField()
+  desc = models.CharField(max_length = 100, help_text = "e.g. \"second midterm\"")
+  exam_date = models.DateField(help_text = "Please use the following format: YYYY-MM-DD.")
   date_added = models.DateField(auto_now_add = True)
   lang = models.ForeignKey(Lang)
   submitter = models.ForeignKey(User, null = True, blank = True)
@@ -34,4 +36,4 @@ def exam_file_name(instance, filename):
 
 class ExamFile(models.Model):
   exam = models.ForeignKey(Exam)
-  exam_file = models.FileField(upload_to = exam_file_name)
+  exam_file = ExtFileField(upload_to = exam_file_name, ext_whitelist = settings.TENTTIARKISTO_FILE_EXTENSIONS)

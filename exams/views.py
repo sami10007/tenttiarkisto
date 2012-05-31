@@ -8,6 +8,7 @@ from exams.models import Course, Exam, ExamFile
 from django.forms import EmailField, ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
+from datetime import datetime
 
 def courselist(request):
   q = request.GET.get('q', '')
@@ -16,7 +17,7 @@ def courselist(request):
 
 def courseview(request, course_id):
   course = get_object_or_404(Course, pk=course_id)
-  return render_to_response('courseview.html', {'course': course, 'exams': course.exam_set.all()}, context_instance=RequestContext(request))
+  return render_to_response('courseview.html', {'course': course, 'exams': course.exam_set.order_by('-exam_date').all()}, context_instance=RequestContext(request))
 
 class CourseForm(ModelForm):
   class Meta:
@@ -36,32 +37,61 @@ def addcourse(request):
     form = CourseForm()
   return render_to_response('addcourse.html', {'form': form, 'saved': saved, 'course': course}, context_instance=RequestContext(request))
 
-def examview(request, exam_id):
-  exam = get_object_or_404(Exam, pk=exam_id)
-  return render_to_response('examview.html', {'exam': exam, 'files': exam.examfile_set.all()}, context_instance=RequestContext(request))
+# exam & add exam views
 
 class ExamForm(ModelForm):
   class Meta:
     model = Exam
+    exclude = ('submitter',)
 
 class ExamFileForm(ModelForm):
   class Meta:
     model = ExamFile
+    exclude = ('exam',)
+
+def examview(request, exam_id):
+  exam = get_object_or_404(Exam, pk=exam_id)
+  fileform = ExamFileForm()
+  added = False
+  if request.method == 'POST':
+    fileform = ExamFileForm(request.POST, request.FILES)
+    if fileform.is_valid():
+      examfile = fileform.save(commit = False)
+      examfile.exam = exam
+      examfile.save()
+      fileform = ExamFileForm()
+      added = True
+  return render_to_response('examview.html', {'exam': exam, 'files': exam.examfile_set.all(), 'fileform': fileform, 'added': added}, context_instance=RequestContext(request))
 
 def addexam(request):
   added = False
+  exam = None
+  form = ExamForm({"exam_date": datetime.now().strftime("%Y-%m-%d")})
+  fileform = ExamFileForm()
   if request.method == 'POST':
     form = ExamForm(request.POST)
-  else:
-    form = ExamForm()
-  return render_to_response('addexam.html', {'form': form, 'added': added}, context_instance=RequestContext(request))
+    fileform = ExamFileForm(request.POST, request.FILES)
+    if form.is_valid() and fileform.is_valid():
+      exam = form.save(commit = False)
+      if request.user.is_authenticated():
+        exam.submitter = request.user
+      exam.save()
+      examfile = fileform.save(commit = False)
+      examfile.exam = exam
+      examfile.save()
+      fileform = ExamFileForm()
+      form = ExamForm()
+      added = True
+  # sort the courses properly
+  form.fields["course"].queryset = Course.objects.order_by('code').all()
+  return render_to_response('addexam.html', {'form': form, 'added': added, 'fileform': fileform, 'new_exam': exam}, context_instance=RequestContext(request))
 
 
 # user registration view
 
 # a user creation form that requires email
 class UserCreationEmailForm(UserCreationForm):
-  email = EmailField(required=True)
+  email = EmailField(required=True, help_text = "We will only use email to help you recover your account.")
   class Meta:
     model = User
     fields = ("username", "email", "password1", "password2")
