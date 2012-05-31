@@ -66,7 +66,7 @@ def examview(request, exam_id):
 def addexam(request):
   added = False
   exam = None
-  form = ExamForm({"exam_date": datetime.now().strftime("%Y-%m-%d")})
+  form = ExamForm(initial = {"exam_date": datetime.now().strftime("%Y-%m-%d")})
   fileform = ExamFileForm()
   if request.method == 'POST':
     form = ExamForm(request.POST)

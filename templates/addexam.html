@@ -6,6 +6,38 @@
       dateFormat: "yy-mm-dd",
       firstDay: 1
     });
+
+    // replace the simple select with something more useful for course selection
+    $("#id_course").hide();
+    // construct an array of entries for typeahead
+    entries = [];
+    // keep track of full course code & name -> id
+    mapping = {};
+    $("#id_course option[value!='']").each(function (i, e) {
+      entries.push(e.innerHTML);
+      mapping[e.innerHTML] = $(e).attr("value");
+    });
+
+    // insert a textbox for course
+    $("#id_course").after('<input type="text" id="course_typeahead">');
+    // make the textbox reflect the select state if not empty
+    if ($("#id_course option[selected]").attr("value") != "") {
+      $("#course_typeahead").val($("#id_course option[selected]")[0].innerHTML);
+    }
+
+    $("#course_typeahead").typeahead({
+      source: entries
+    }); 
+
+    // make course changes update the hidden selectbox too
+    $("#course_typeahead").change(function () {
+      text = $("#course_typeahead").val(); 
+      if (typeof mapping[text] != "undefined") {
+        $("#id_course").val(mapping[text]);
+      } else {
+        $("#id_course").val("");
+      }
+    });
   });
 {% endblock %}
 
