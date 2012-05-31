@@ -2,7 +2,10 @@
 
 {% block js %}
   $(function(){
-      $("*[rel=tooltip]").tooltip();
+      // ugly, it would be better to add field.help_text as titles in genericform.html
+      $(".form_helptext").hide();
+      $("#id_username").tooltip({title: "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."});
+      $("#id_password2").tooltip({title: "Enter the same password as above, for verification."});
   });
 {% endblock %}
 
@@ -13,10 +16,8 @@
     Account created succesfully! You can now add courses.
   </div>
 {% else %}
-  <form action="/register/" method="post">{% csrf_token %}
-    <p><label for="id_username">Username:</label> <input id="id_username" type="text" name="username" maxlength="30" rel="tooltip" title="Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."/></p>
-    <p><label for="id_password1">Password:</label> <input type="password" name="password1" id="id_password1" /></p>
-    <p><label for="id_password2">Password confirmation:</label> <input type="password" name="password2" id="id_password2" rel="tooltip" title="Enter the same password as above, for verification."/></p>
+  <form action="/register/" method="post" class="well">{% csrf_token %}
+    {% include "genericform.html" %}
     <input type="submit" value="Register" class="btn" />
   </form>
 {% endif %}

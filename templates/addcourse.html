@@ -4,11 +4,11 @@
 <h2>Add a course</h2>
 {% if saved %}
 <div class="alert alert-success">
-  The course was succesfully added!
+  The course was succesfully added! <a href="{{ course.get_absolute_url }}">View the course page</a>
 </div>
 {% endif %}
-<form action="/courses/add/" method="post">{% csrf_token %}
-{{ form.as_p }}
+<form action="/courses/add/" class="well" method="post">{% csrf_token %}
+{% include "genericform.html" %}
 <input type="submit" value="Add course" class="btn" />
 </form>
 {% endblock %}

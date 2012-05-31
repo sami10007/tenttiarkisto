@@ -1,0 +1,29 @@
+{% for hidden in form.hidden_fields %}
+  {{ hidden }}
+{% endfor %}
+{% for field in form.visible_fields %}
+  {% if field.errors %}
+    <div class="alert alert-error">
+    {% for error in field.errors %}
+      {% if not forloop.first %}
+        <br>
+      {% endif %}
+      {{ error|escape }}
+    {% endfor %}
+    </div>
+    <fieldset class="control-group error">
+  {% endif %}
+  <p>
+    <label for="id_{{ field.html_name }}">
+      {{ field.label }}{% spaceless %}
+      {% if field.help_text %}
+        <span class="form_helptext"> ({{ field.help_text }})</span>
+      {% endif %}
+      {% endspaceless %}:
+    </label>
+    {{ field }}
+  </p>
+  {% if field.errors %}
+    </fieldset>
+  {% endif %}
+{% endfor %}

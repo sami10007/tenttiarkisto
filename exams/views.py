@@ -1,10 +1,11 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.template import RequestContext
-from exams.models import Course, Exam
-from django.forms import ModelForm
+from exams.models import Course, Exam, ExamFile
+from django.forms import EmailField, ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 
@@ -24,15 +25,16 @@ class CourseForm(ModelForm):
 @login_required
 def addcourse(request):
   saved = False
+  course = None
   if request.method == 'POST':
     form = CourseForm(request.POST)
     if form.is_valid():
-      form.save()
+      course = form.save()
       saved = True
       form = CourseForm()
   else:
     form = CourseForm()
-  return render_to_response('addcourse.html', {'form': form, 'saved': saved}, context_instance=RequestContext(request))
+  return render_to_response('addcourse.html', {'form': form, 'saved': saved, 'course': course}, context_instance=RequestContext(request))
 
 def examview(request, exam_id):
   exam = get_object_or_404(Exam, pk=exam_id)
@@ -41,6 +43,10 @@ def examview(request, exam_id):
 class ExamForm(ModelForm):
   class Meta:
     model = Exam
+
+class ExamFileForm(ModelForm):
+  class Meta:
+    model = ExamFile
 
 def addexam(request):
   added = False
@@ -52,13 +58,27 @@ def addexam(request):
 
 
 # user registration view
+
+# a user creation form that requires email
+class UserCreationEmailForm(UserCreationForm):
+  email = EmailField(required=True)
+  class Meta:
+    model = User
+    fields = ("username", "email", "password1", "password2")
+  def save(self, commit=True):
+    user = super(UserCreationEmailForm, self).save(commit=False)
+    user.email = self.cleaned_data["email"]
+    if commit:
+      user.save()
+    return user
+
 def register(request):
   if request.user.is_authenticated():
     return HttpResponseRedirect('/')
 
   created = False
   if request.method == 'POST':
-    form = UserCreationForm(request.POST)
+    form = UserCreationEmailForm(request.POST)
     if form.is_valid():
       created = True
       form.save()
@@ -66,5 +86,5 @@ def register(request):
       user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
       login(request, user)
   else:
-    form = UserCreationForm()
+    form = UserCreationEmailForm()
   return render_to_response('register.html', {'form': form, 'created': created}, context_instance=RequestContext(request))
