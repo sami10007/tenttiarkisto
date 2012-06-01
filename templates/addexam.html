@@ -3,8 +3,8 @@
 {% block js %}
   $(function () {
     $("#id_exam_date").datepicker({
-      dateFormat: "yy-mm-dd",
-      firstDay: 1
+      format: "yyyy-mm-dd",
+      weekStart: 1
     });
 
     // replace the simple select with something more useful for course selection
