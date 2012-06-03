@@ -8,7 +8,7 @@
   </div>
 {% else %}
   <form action="/register/" method="post" class="well">{% csrf_token %}
-    {% include "genericform.html" %}
+    {% include "partial/genericform.html" %}
     <input type="submit" value="Register" class="btn" />
   </form>
 {% endif %}

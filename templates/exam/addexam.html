@@ -49,8 +49,8 @@
 </div>
 {% endif %}
 <form action="/exams/add/" method="post" class="well" enctype="multipart/form-data">{% csrf_token %}
-{% include "genericform.html" %}
-{% include "genericform.html" with form=fileform %}
+{% include "partial/genericform.html" %}
+{% include "partial/genericform.html" with form=fileform %}
 <input type="submit" value="Add exam" class="btn" />
 </form>
 {% endblock %}

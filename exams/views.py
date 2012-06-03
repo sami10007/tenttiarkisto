@@ -17,11 +17,11 @@ def frontpage(request):
 def courselist(request):
   q = request.GET.get('q', '')
   all_courses = Course.objects.annotate(exam_count=Count('exam')).order_by('code').filter(Q(name__icontains=q)|Q(code__icontains=q)).all()
-  return render_to_response('courselist.html', {'courses': all_courses}, context_instance=RequestContext(request))
+  return render_to_response('course/courselist.html', {'courses': all_courses}, context_instance=RequestContext(request))
 
 def courseview(request, course_id):
   course = get_object_or_404(Course, pk=course_id)
-  return render_to_response('courseview.html', {'course': course, 'exams': course.exam_set.order_by('-exam_date').all()}, context_instance=RequestContext(request))
+  return render_to_response('course/courseview.html', {'course': course, 'exams': course.exam_set.order_by('-exam_date').all()}, context_instance=RequestContext(request))
 
 class CourseForm(ModelForm):
   class Meta:
@@ -38,7 +38,7 @@ def addcourse(request):
       form = CourseForm()
   else:
     form = CourseForm()
-  return render_to_response('addcourse.html', {'form': form, 'saved': saved, 'course': course}, context_instance=RequestContext(request))
+  return render_to_response('course/addcourse.html', {'form': form, 'saved': saved, 'course': course}, context_instance=RequestContext(request))
 
 # exam & add exam views
 
@@ -64,7 +64,7 @@ def examview(request, exam_id):
       examfile.save()
       fileform = ExamFileForm()
       added = True
-  return render_to_response('examview.html', {'exam': exam, 'files': exam.examfile_set.all(), 'fileform': fileform, 'added': added}, context_instance=RequestContext(request))
+  return render_to_response('exam/examview.html', {'exam': exam, 'files': exam.examfile_set.all(), 'fileform': fileform, 'added': added}, context_instance=RequestContext(request))
 
 def addexam(request):
   added = False
@@ -87,7 +87,7 @@ def addexam(request):
       added = True
   # sort the courses properly
   form.fields["course"].queryset = Course.objects.order_by('code').all()
-  return render_to_response('addexam.html', {'form': form, 'added': added, 'fileform': fileform, 'new_exam': exam}, context_instance=RequestContext(request))
+  return render_to_response('exam/addexam.html', {'form': form, 'added': added, 'fileform': fileform, 'new_exam': exam}, context_instance=RequestContext(request))
 
 
 # user registration view
@@ -120,7 +120,7 @@ def register(request):
       login(request, user)
   else:
     form = UserCreationEmailForm()
-  return render_to_response('register.html', {'form': form, 'created': created}, context_instance=RequestContext(request))
+  return render_to_response('account/register.html', {'form': form, 'created': created}, context_instance=RequestContext(request))
 
 # view for changing account details
 
@@ -159,4 +159,4 @@ def modifyaccount(request):
         auth_user.save()
       else:
         form._errors['current_password'] = form.error_class(["The password was wrong!"])
-  return render_to_response('modifyaccount.html', {"form": form, 'saved': saved}, context_instance=RequestContext(request))
+  return render_to_response('account/modifyaccount.html', {"form": form, 'saved': saved}, context_instance=RequestContext(request))

@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^exams/add/$', 'exams.views.addexam'),
 
     # account stuff
-    (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+    (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'account/login.html'}),
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^register/$', 'exams.views.register'),
     url(r'^account/$', 'exams.views.modifyaccount'),

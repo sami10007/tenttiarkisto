@@ -36,7 +36,7 @@
 
 <h2>Add file to exam</h2>
 <form action="." method="post" enctype="multipart/form-data" class="well">{% csrf_token %}
-  {% include "genericform.html" with form=fileform %}
+  {% include "partial/genericform.html" with form=fileform %}
   <input type="submit" value="Add file" class="btn" />
 </form>
 {% endblock %}
