@@ -7,7 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}),
+    url(r'^$', 'exams.views.frontpage'),
     # url(r'^tenttiarkisto/', include('tenttiarkisto.foo.urls')),
     url(r'^courses/$', 'exams.views.courselist'),
     url(r'^courses/add/$', 'exams.views.addcourse'),
@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^register/$', 'exams.views.register'),
+    url(r'^account/$', 'exams.views.modifyaccount'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Modify account details</h2>
+{% if saved %}
+<div class="alert alert-success">
+  Account details saved successfully!
+</div>
+{% endif %}
+<form class="well" method="post" action=".">
+{% csrf_token %}
+{% include "genericform.html" %}
+<input type="submit" value="Save" class="btn" />
+</form>
+
+{% endblock %}

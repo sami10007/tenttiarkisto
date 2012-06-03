@@ -3,4 +3,10 @@
 {% block content %}
   <h2>Search for courses</h2>
   {% include "searchform.html" %}
+  <h2>Archive maintainers</h2>
+  <table class="table table-bordered table-striped">
+  {% for maintainer in maintainers %}
+    <tr><td>{{ maintainer.group }}</td><td>{{ maintainer.view_email }}</td></tr>
+  {% endfor %}
+  </table>
 {% endblock %}

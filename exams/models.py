@@ -37,3 +37,12 @@ def exam_file_name(instance, filename):
 class ExamFile(models.Model):
   exam = models.ForeignKey(Exam)
   exam_file = ExtFileField(upload_to = exam_file_name, ext_whitelist = settings.TENTTIARKISTO_FILE_EXTENSIONS)
+
+# maintainers for frontpage
+
+class Maintainer(models.Model):
+  group = models.CharField(max_length = 100)
+  email = models.EmailField()
+
+  def view_email(self):
+    return self.email.replace("@", " (at) ")

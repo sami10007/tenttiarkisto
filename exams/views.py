@@ -4,11 +4,15 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.template import RequestContext
-from exams.models import Course, Exam, ExamFile
-from django.forms import EmailField, ModelForm
+from exams.models import Course, Exam, ExamFile, Maintainer
+from django.forms import EmailField, ModelForm, Form, PasswordInput, CharField
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from datetime import datetime
+
+def frontpage(request):
+  maintainers = Maintainer.objects.order_by('group').all()
+  return render_to_response('index.html', {'maintainers': maintainers}, context_instance=RequestContext(request))
 
 def courselist(request):
   q = request.GET.get('q', '')
@@ -117,3 +121,42 @@ def register(request):
   else:
     form = UserCreationEmailForm()
   return render_to_response('register.html', {'form': form, 'created': created}, context_instance=RequestContext(request))
+
+# view for changing account details
+
+class ModifyAccountForm(Form):
+  current_password = CharField(widget = PasswordInput)
+  email = EmailField()
+  new_password1 = CharField(label = "New password", help_text = "Optional", widget = PasswordInput, required = False)
+  new_password2 = CharField(label = "New password confirmation", help_text = "Enter the same password as above, for verification if you want to change your password.", widget = PasswordInput, required = False)
+
+  def clean(self):
+    cleaned_data = super(ModifyAccountForm, self).clean()
+    new_pw1 = cleaned_data.get('new_password1')
+    new_pw2 = cleaned_data.get('new_password2')
+    if new_pw1 != new_pw2:
+      del cleaned_data['new_password1']
+      del cleaned_data['new_password2']
+      self._errors['new_password2'] = self.error_class(["The two password fields didn't match."])
+
+    return cleaned_data
+
+@login_required
+def modifyaccount(request):
+  form = ModifyAccountForm(initial = {"email": request.user.email})
+  saved = False
+  if request.method == "POST":
+    form = ModifyAccountForm(request.POST)
+    if form.is_valid():
+      auth_user = authenticate(username = request.user.username, password = form.cleaned_data['current_password'])
+      if auth_user is not None:
+        # form valid, password correct, save the data
+        if form.cleaned_data['new_password1'] != '':
+          auth_user.set_password(form.cleaned_data['new_password1'])
+          new_pw = True
+        auth_user.email = form.cleaned_data['email']
+        saved = True
+        auth_user.save()
+      else:
+        form._errors['current_password'] = form.error_class(["The password was wrong!"])
+  return render_to_response('modifyaccount.html', {"form": form, 'saved': saved}, context_instance=RequestContext(request))
