@@ -160,3 +160,9 @@ def modifyaccount(request):
       else:
         form._errors['current_password'] = form.error_class(["The password was wrong!"])
   return render_to_response('account/modifyaccount.html', {"form": form, 'saved': saved}, context_instance=RequestContext(request))
+
+# view for exams added by current user
+@login_required
+def accountexams(request):
+  exams = Exam.objects.filter(submitter = request.user).order_by("-date_added")
+  return render_to_response('account/ownexams.html', {"exams": exams}, context_instance=RequestContext(request))

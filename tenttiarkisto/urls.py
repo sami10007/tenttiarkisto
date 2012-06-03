@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^register/$', 'exams.views.register'),
     url(r'^account/$', 'exams.views.modifyaccount'),
+    url(r'^ownexams/$', 'exams.views.accountexams'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
