@@ -23,7 +23,6 @@ class CourseForm(ModelForm):
   class Meta:
     model = Course
 
-@login_required
 def addcourse(request):
   saved = False
   course = None
