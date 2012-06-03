@@ -10,7 +10,7 @@
 <h2>Exam details</h2>
 <table class="table table-bordered table-striped">
   <tr>
-    <td>Course</td><td>{{ exam.course.code }} {{ exam.course.name }}</td>
+    <td>Course</td><td><a href="{{ exam.course.get_absolute_url }}">{{ exam.course.code }} {{ exam.course.name }}</a></td>
   </tr>
   <tr>
     <td>Exam date</td><td>{{ exam.exam_date|date:"d.m.Y" }}</td>
