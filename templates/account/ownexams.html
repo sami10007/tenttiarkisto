@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Exams added by you</h2>
+{% if exams %}
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Exam date</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    {% for exam in exams %}
+      <tr>
+        <td><a href="{{ exam.course.get_absolute_url }}">{{ exam.course }}</a></td>
+        <td><a href="{{ exam.get_absolute_url }}">{{ exam.exam_date }}</a></td>
+        <td><a href="{{ exam.get_absolute_url }}">{{ exam.desc }}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <div class="well">
+    You haven't added any exams.
+  </div>
+{% endif %}
+
+{% endblock %}
