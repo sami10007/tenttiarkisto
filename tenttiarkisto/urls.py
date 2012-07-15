@@ -12,8 +12,10 @@ urlpatterns = patterns('',
     url(r'^courses/$', 'exams.views.courselist'),
     url(r'^courses/add/$', 'exams.views.addcourse'),
     url(r'^courses/(?P<course_id>\d+)/(.+)?$', 'exams.views.courseview'),
+    url(r'^exams/(?P<exam_id>\d+)/(.+)?/delete$', 'exams.views.delete_exam'),
     url(r'^exams/(?P<exam_id>\d+)/(.+)?$', 'exams.views.examview'),
     url(r'^exams/add/$', 'exams.views.addexam'),
+    url(r'^examfile/(?P<examfile_id>\d+)/delete$', 'exams.views.delete_examfile'),
 
     # account stuff
     (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'account/login.html'}),

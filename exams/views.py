@@ -7,7 +7,7 @@ from django.template import RequestContext
 from exams.models import Course, Exam, ExamFile, Maintainer
 from django.forms import EmailField, ModelForm, Form, PasswordInput, CharField
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseForbidden
 from datetime import datetime
 
 def frontpage(request):
@@ -52,6 +52,9 @@ class ExamFileForm(ModelForm):
     model = ExamFile
     exclude = ('exam',)
 
+def allowed_to_edit_exam(exam, user):
+  return exam.submitter == user
+
 def examview(request, exam_id):
   exam = get_object_or_404(Exam, pk=exam_id)
   fileform = ExamFileForm()
@@ -64,7 +67,29 @@ def examview(request, exam_id):
       examfile.save()
       fileform = ExamFileForm()
       added = True
-  return render_to_response('exam/examview.html', {'exam': exam, 'files': exam.examfile_set.all(), 'fileform': fileform, 'added': added}, context_instance=RequestContext(request))
+  return render_to_response('exam/examview.html', {'exam': exam, 'files': exam.examfile_set.all(), 'fileform': fileform, 'added': added, 'allowed_to_edit_exam': allowed_to_edit_exam(exam, request.user)}, context_instance=RequestContext(request))
+
+def delete_exam(request, exam_id):
+  if request.method == 'POST':
+    exam = get_object_or_404(Exam, pk=exam_id)
+    if allowed_to_edit_exam(exam, request.user):
+      exam.delete()
+      return HttpResponseRedirect(exam.course.get_absolute_url())
+    else:
+      return HttpResponseForbidden("403 Forbidden")
+  else:
+    return HttpResponseNotAllowed("405 Method not allowed")
+
+def delete_examfile(request, examfile_id):
+  if request.method == 'POST':
+    examfile = get_object_or_404(ExamFile, pk=examfile_id)
+    if allowed_to_edit_exam(examfile.exam, request.user):
+      examfile.delete()
+      return HttpResponseRedirect(examfile.exam.get_absolute_url())
+    else:
+      return HttpResponseForbidden("403 Forbidden")
+  else:
+    return HttpResponseNotAllowed("405 Method not allowed")
 
 def addexam(request):
   added = False

@@ -8,7 +8,7 @@
     });
 
     placeholder = "Select a course";
-    $("option[value='']").html("");
+    $("#id_course option[value='']").html("");
     $("#id_course").select2({
       placeholder: placeholder,
       formatNoMatches: function(term) {return "No course found. You can add a new one from the left"} 

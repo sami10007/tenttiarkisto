@@ -7,10 +7,22 @@
 </div>
 {% endif %}
 
+{% if allowed_to_edit_exam %}
+<h2>Exam controls</h2>
+<div class="well">
+  <form method="get" action="edit" style="float: left; margin: 0 8px 0 0;">
+    <input class="btn btn-primary" type="submit" value="Edit exam" />
+  </form>
+  <form method="post" action="delete" style="margin: 0;">
+    {% csrf_token %}
+    <input class="btn btn-danger icon-trash" type="submit" value="Delete exam" />
+  </form>
+</div>
+{% endif %}
 <h2>Exam details</h2>
 <table class="table table-bordered table-striped">
   <tr>
-    <td>Course</td><td><a href="{{ exam.course.get_absolute_url }}">{{ exam.course.code }} {{ exam.course.name }}</a></td>
+    <td>Course</td><td><a href="{{ exam.course.get_absolute_url }}">{{ exam.course.code }}: {{ exam.course.name }}</a></td>
   </tr>
   <tr>
     <td>Exam date</td><td>{{ exam.exam_date|date:"d.m.Y" }}</td>
@@ -30,7 +42,14 @@
 <h2>Exam files</h2>
 <table class="table table-bordered table-striped">
   {% for file in files %}
-    <tr><td><a href="{{ file.exam_file.url }}">{{ file.exam_file.url }}</a></tr></td>
+  <tr><td><a href="{{ file.exam_file.url }}">{{ file.exam_file.url }}</a>
+    {% if allowed_to_edit_exam %}
+      <form method="post" action="/examfile/{{ file.id }}/delete" style="margin: 0; display: inline-block;">
+        {% csrf_token %}
+        <input class="btn btn-danger btn-small icon-trash" type="submit" value="Delete file" />
+      </form>
+    {% endif %}
+  </tr></td>
   {% endfor %}
 </table>
 
