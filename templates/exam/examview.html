@@ -15,7 +15,7 @@
   </form>
   <form method="post" action="delete" style="margin: 0;">
     {% csrf_token %}
-    <input class="btn btn-danger icon-trash" type="submit" value="Delete exam" />
+    <input class="btn btn-danger icon-trash confirm-delete" type="submit" value="Delete exam" />
   </form>
 </div>
 {% endif %}
@@ -46,7 +46,7 @@
     {% if allowed_to_edit_exam %}
       <form method="post" action="/examfile/{{ file.id }}/delete" style="margin: 0; display: inline-block;">
         {% csrf_token %}
-        <input class="btn btn-danger btn-small icon-trash" type="submit" value="Delete file" />
+        <input class="btn btn-danger btn-small icon-trash confirm-delete" type="submit" value="Delete file" />
       </form>
     {% endif %}
   </tr></td>

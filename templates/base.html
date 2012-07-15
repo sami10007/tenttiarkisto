@@ -16,6 +16,10 @@
         $(".form_helptext").hide().each(function(i, e) {
           $("#" + $(e).attr("data-field-id")).tooltip({title: e.innerHTML.replace(/^ *\((.+)\)$/, "$1")});
         });
+        // add delete confirmations
+        $(".confirm-delete").click(function(e) {
+          return window.confirm("Are you sure you want to delete?");
+        });
       });
       {% block js %}{% endblock %}
     </script>

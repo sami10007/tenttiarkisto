@@ -91,6 +91,18 @@ def delete_examfile(request, examfile_id):
   else:
     return HttpResponseNotAllowed("405 Method not allowed")
 
+def edit_exam(request, exam_id):
+  exam = get_object_or_404(Exam, pk=exam_id)
+  if not allowed_to_edit_exam(exam, request.user):
+    return HttpResponseForbidden("403 Forbidden")
+  form = ExamForm(instance=exam)
+  if request.method == 'POST':
+    form = ExamForm(request.POST, instance=exam)
+    if form.is_valid():
+      form.save()
+      return HttpResponseRedirect(exam.get_absolute_url())
+  return render_to_response('exam/editexam.html', {'form': form}, context_instance=RequestContext(request))
+
 def addexam(request):
   added = False
   exam = None
