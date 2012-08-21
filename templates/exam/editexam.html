@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block js %}
+  $(function () {
+    $("#id_exam_date").datepicker({
+      format: "yyyy-mm-dd",
+      weekStart: 1
+    });
+
+    placeholder = "Select a course";
+    $("#id_course option[value='']").html("");
+    $("#id_course").select2({
+      placeholder: placeholder,
+      formatNoMatches: function(term) {return "No course found. You can add a new one from the left"} 
+    });
+  });
+{% endblock %}
+
+{% block content %}
+<h2>Edit exam</h2>
+<form action="edit" method="post" class="well">{% csrf_token %}
+{% include "partial/genericform.html" %}
+<input type="submit" value="Save exam" class="btn" />
+</form>
+{% endblock %}

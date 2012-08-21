@@ -7,12 +7,32 @@
       weekStart: 1
     });
 
-    placeholder = "Select a course";
-    $("#id_course option[value='']").html("");
-    $("#id_course").select2({
-      placeholder: placeholder,
-      formatNoMatches: function(term) {return "No course found. You can add a new one from the left"} 
+    $("#id_course > option[value='']").remove();
+    var selectedCourse = $("#id_course > option[selected]");
+    var courses = $.map($("#id_course > option"), function(e) {
+      return {id: $(e).attr("value"), text: $(e).html()};
     });
+
+    $("#id_course").replaceWith('<input type="hidden" name="course" id="id_course">');
+    $("#id_course").select2({
+      placeholder: "Select a course",
+      minimumInputLength: 3,
+      formatNoMatches: function(term) {return "No course found. You can add a new one from the left"},
+      query: function(query) {
+        var matchingCourses = [];
+        $.each(courses, function(i, e) {
+          if (e.text.toLowerCase().indexOf(query.term.toLowerCase()) !== -1) {
+            matchingCourses.push(e);
+          }
+        });
+        query.callback({results: matchingCourses});
+      }
+    });
+    if (selectedCourse.size() > 0) {
+      $("#id_course").select2("val", {id: selectedCourse.attr("value"), text: selectedCourse.html()});
+    } else {
+      $("#id_course").select2("open");
+    }
   });
 {% endblock %}
 
