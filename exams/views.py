@@ -15,7 +15,7 @@ def frontpage(request):
   return render_to_response('index.html', {'maintainers': maintainers}, context_instance=RequestContext(request))
 
 def courselist(request):
-  q = request.GET.get('q', '')
+  q = request.GET.get('q', '').strip()
   all_courses = Course.objects.annotate(exam_count=Count('exam')).order_by('code').filter(Q(name__icontains=q)|Q(code__icontains=q)).all()
   return render_to_response('course/courselist.html', {'courses': all_courses}, context_instance=RequestContext(request))
 
