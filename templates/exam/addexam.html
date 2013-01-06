@@ -40,17 +40,18 @@
 <h2>Add an exam</h2>
 {% if added %}
 <div class="alert alert-success">
-  The exam was succesfully added! <a href="{{ new_exam.get_absolute_url }}">View the exam page</a>
+  <p>The exam was succesfully added! You can add more files to it on the exam page.</p> <a href="{{ new_exam.get_absolute_url }}">View the exam page</a>
 </div>
 {% endif %}
 {% if not user.is_authenticated %}
 <div class="alert">
-  You haven't logged in! Logging in allows you to edit the added exam later.
+  You haven't logged in! Logging in allows you to edit the added exam later. More files can be added to the exam even without registering.
 </div>
 {% endif %}
 <form action="/exams/add/" method="post" class="well" enctype="multipart/form-data">{% csrf_token %}
 {% include "partial/genericform.html" %}
 {% include "partial/genericform.html" with form=fileform %}
+<p>Note: you can add more files to the exam later</p>
 <input type="submit" value="Add exam" class="btn" />
 </form>
 {% endblock %}
