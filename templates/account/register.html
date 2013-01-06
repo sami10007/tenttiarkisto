@@ -4,7 +4,7 @@
 <h2>Account registration</h2>
 {% if created %}
   <div class="alert alert-success">
-    Account created succesfully! You can now add courses.
+    Account created succesfully! You can now modify exams you've added when logged in.
   </div>
 {% else %}
   <form action="/register/" method="post" class="well">{% csrf_token %}
