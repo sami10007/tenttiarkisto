@@ -43,6 +43,11 @@
   The exam was succesfully added! <a href="{{ new_exam.get_absolute_url }}">View the exam page</a>
 </div>
 {% endif %}
+{% if not user.is_authenticated %}
+<div class="alert">
+  You haven't logged in! Logging in allows you to edit the added exam later.
+</div>
+{% endif %}
 <form action="/exams/add/" method="post" class="well" enctype="multipart/form-data">{% csrf_token %}
 {% include "partial/genericform.html" %}
 {% include "partial/genericform.html" with form=fileform %}
